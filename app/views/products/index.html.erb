@@ -1,0 +1,20 @@
+<h1>List of Products next to me</h1>
+
+<ul>
+	<% @products.each do |product| %>
+	
+	<div style="display:inline-block; margin:20px;">
+		<%= image_tag product.img %>
+		<br>
+		<%= link_to product.title, product_path(product) %>
+		Price: <%= link_to product.price, product_path(product) %>
+		<%= link_to 'Edit', edit_product_path(product) %>
+		<%= link_to 'Delete', product, method: :delete, data: {confirm: 'Are you sure'} %>
+
+		</div>
+			
+		
+	<% end %>
+</ul>		
+
+		<%= link_to 'New', new_product_path %>

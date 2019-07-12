@@ -9,4 +9,8 @@ Rails.application.routes.draw do
   get '/cart', to: 'carts#index'
 
   get '/cart/add', to: 'carts#add'
+
+  get '/cart/checkout', to: 'carts#checkout'
+
+  get '/cart/:id', to: 'carts#show', as: 'carts'
 end

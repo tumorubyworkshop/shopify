@@ -1,27 +1,38 @@
-class CartsController <ApplicationController
-    
-    before_action :authenticate_user!
+class CartsController < ApplicationController
 
-    def index 
+	before_action :authenticate_user!
+	before_action :find_or_create_cart
 
-      @cart = current_user.carts.last
-    
-      
+	def index
+		@cart_items = @cart.cart_items
+	end
 
-      if @cart.nil?
-        @cart = current_user.carts.create
-      end
-      @cart_items = @cart.cart_items
+	def add
+		@cart.cart_items.create(product_id: params[:product])
 
-    end
-    def add
-        @cart=current_user.carts.last
-        if @cart.nil?
-            @cart=current_user.carts.create
-        end
+		redirect_to '/cart'
+	end
 
-        @cart.cart_items.create(product_id: params[:product])
+  def checkout
+    current_user.pay_and_checkout!(@cart)
 
-        redirect_to '/cart'
-    end
+    redirect_to carts_path(@cart)
+  end
+
+  def show
+    @checked_out_cart = current_user.carts.where(id: params[:id], checked_out: true).last
+
+    redirect_to root_path if @checked_out_cart.nil?
+  end
+
+  private
+
+  def find_or_create_cart
+    @cart = current_user.carts.where(checked_out: false).last
+
+		if @cart.nil?
+			@cart = current_user.carts.create
+		end
+  end
+
 end

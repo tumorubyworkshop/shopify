@@ -6,4 +6,15 @@ class User < ApplicationRecord
 
   has_many :carts
 
+  def has_money_for?(cart)
+    balance >= cart.total
+  end
+
+  def pay_and_checkout!(cart)
+     pay!(cart.total) && cart.checkout! if has_money_for?(cart)
+  end
+
+  def pay!(total)
+    update(balance: balance - total)
+  end
 end
